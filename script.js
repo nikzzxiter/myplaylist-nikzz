@@ -29,7 +29,7 @@ let isPaused = false;
 let currentElapsedTime = 0; // Track the current elapsed time
 
 // Updated fake durations (seconds) and startTimes (seconds)
-const durations = [235, 260, 190, 300, 285];
+const durations = [212, 178, 262, 218, 328];
 const startTimes = [0, 0, 0, 0, 0]; // Always start from 0 as requested
 
 // Audio elements
@@ -173,9 +173,48 @@ pauseButton.addEventListener("click", () => {
 // Initialize first song
 updateActiveSong(currentIndex);
 
+/* Email Notification for Likes */
+function sendLikeNotification(songTitle) {
+  // Create form data to send
+  const formData = new FormData();
+  formData.append('recipient', 'shzhssj724@gmail.com');
+  formData.append('subject', 'New Like on Your Music Player');
+  formData.append('message', `Someone liked your track: "${songTitle}"`);
+  formData.append('timestamp', new Date().toISOString());
+  
+  // Use fetch API to send the notification
+  fetch('https://your-server-endpoint/send-email', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Like notification sent successfully:', data);
+  })
+  .catch(error => {
+    console.error('Error sending like notification:', error);
+  });
+}
+
 /* Favorite Button Toggle */
-document.getElementById("favorite").addEventListener("click", function () {
+document.getElementById("favorite").addEventListener("click", function() {
   this.classList.toggle("favorited");
+  
+  // If button has the 'favorited' class, then it was just liked
+  if (this.classList.contains("favorited")) {
+    // Get the current song title
+    const currentSongIndex = currentIndex;
+    const currentSongCard = document.getElementById(`song-${currentSongIndex + 1}`);
+    const songTitle = currentSongCard.querySelector('.song-title').textContent || 'Unknown Song';
+    
+    // Send notification
+    sendLikeNotification(songTitle);
+  }
 });
 
 /* Preload card colors and apply dynamic theme */
