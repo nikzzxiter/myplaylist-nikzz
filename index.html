@@ -43,7 +43,7 @@
           <label class="card" for="item-3" id="song-3">
             <img src="https://i.imgur.com/fmGOpGS.jpeg" alt="WILDFLOWER" />
           </label>
-          <!-- Song 4: One Summer’s Day -->
+          <!-- Song 4: One Summer's Day -->
           <label class="card" for="item-4" id="song-4">
             <img src="https://i.imgur.com/iGKd34v.jpeg" alt="Imagination" />
           </label>
@@ -100,7 +100,7 @@
               <span class="remaining"></span>
             </div>
           </div>
-          <!-- SONG INFO 4: One Summer’s Day -->
+          <!-- SONG INFO 4: One Summer's Day -->
           <div class="song-info" id="song-info-4">
             <div class="title">Imagination</div>
             <div class="song-details">
@@ -153,6 +153,15 @@
         <button class="modal-close" onclick="closeModal()">Open Playlist</button>
       </div>
     </div>
+
+    <!-- EmailJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      // Inisialisasi EmailJS dengan public key Anda
+      (function(){
+         emailjs.init("PTtgOd_4dnoDT_UDe");
+      })();
+    </script>
 
     <!-- Link to external JS -->
     <script src="script.js"></script>
