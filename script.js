@@ -173,31 +173,25 @@ pauseButton.addEventListener("click", () => {
 // Initialize first song
 updateActiveSong(currentIndex);
 
-/* Email Notification for Likes */
+// Tambahkan fungsi ini ke dalam file JavaScript Anda
 function sendLikeNotification(songTitle) {
-  // Create form data to send
-  const formData = new FormData();
-  formData.append('recipient', 'shzhssj724@gmail.com');
-  formData.append('subject', 'New Like on Your Music Player');
-  formData.append('message', `Someone liked your track: "${songTitle}"`);
-  formData.append('timestamp', new Date().toISOString());
+  // Parameter untuk template
+  const templateParams = {
+    subject: "Notifikasi Like pada Music Player",
+    songTitle: songTitle,
+    to_email: "shzhssj724@gmail.com"
+  };
   
-  // Use fetch API to send the notification
-  fetch('https://your-server-endpoint/send-email', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Like notification sent successfully:', data);
-  })
-  .catch(error => {
-    console.error('Error sending like notification:', error);
+  // Kirim email menggunakan EmailJS
+  emailjs.send(
+    "service_v1el4cd", // Anda perlu mengganti ini dengan Service ID Anda
+    "template_peg2x1o", // Template ID yang Anda berikan
+    templateParams
+  )
+  .then(function(response) {
+    console.log("Email berhasil dikirim!", response.status, response.text);
+  }, function(error) {
+    console.error("Gagal mengirim email:", error);
   });
 }
 
@@ -205,15 +199,16 @@ function sendLikeNotification(songTitle) {
 document.getElementById("favorite").addEventListener("click", function() {
   this.classList.toggle("favorited");
   
-  // If button has the 'favorited' class, then it was just liked
+  // Jika tombol memiliki class 'favorited', berarti baru saja disukai
   if (this.classList.contains("favorited")) {
-    // Get the current song title
+    // Dapatkan judul lagu dan nama artis yang sedang diputar
     const currentSongIndex = currentIndex;
-    const currentSongCard = document.getElementById(`song-${currentSongIndex + 1}`);
-    const songTitle = currentSongCard.querySelector('.song-title').textContent || 'Unknown Song';
+    const songInfoElement = document.querySelectorAll(".song-info")[currentSongIndex];
+    const songTitle = songInfoElement.querySelector(".title").textContent;
+    const artistName = songInfoElement.querySelector(".artist").textContent;
     
-    // Send notification
-    sendLikeNotification(songTitle);
+    // Kirim notifikasi
+    sendLikeNotification(songTitle, artistName);
   }
 });
 
